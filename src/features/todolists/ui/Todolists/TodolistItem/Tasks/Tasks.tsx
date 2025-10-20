@@ -4,19 +4,25 @@ import type { DomainTodolist } from "@/features/todolists/model/todolists-slice"
 import List from "@mui/material/List"
 import { TaskItem } from "./TaskItem/TaskItem"
 import { TasksSkeleton } from "@/features/todolists/ui/Todolists/TodolistItem/Tasks/TasksSkeleton/TasksSkeleton.tsx"
+// import { useAppDispatch } from "@/common/hooks"
+// import { setAppErrorAC } from "@/app/app-slice.ts"
+// import { useEffect } from "react"
 
 type Props = {
   todolist: DomainTodolist
 }
 
+// type TasksError = {
+//   data: {
+//     message: string
+//   }
+// }
+
 export const Tasks = ({ todolist }: Props) => {
   const { id, filter } = todolist
 
   const { data, isLoading } = useGetTasksQuery(id)
-
-  if (isLoading) {
-    return <TasksSkeleton />
-  }
+  //const dispatch = useAppDispatch()
 
   let filteredTasks = data?.items
   if (filter === "active") {
@@ -24,6 +30,22 @@ export const Tasks = ({ todolist }: Props) => {
   }
   if (filter === "completed") {
     filteredTasks = filteredTasks?.filter((task) => task.status === TaskStatus.Completed)
+  }
+
+  // useEffect(() => {
+  //   if (err) {
+  //    if ("status" in err) {
+  //      const errMSg = "error" in err ? err.error : JSON.stringify(err)
+  //      dispatch(setAppErrorAC({error: errMSg }))
+  //    } else {
+  //      dispatch(setAppErrorAC({error: err.message || 'Something went wrong' }))
+  //    }
+  //     // dispatch(setAppErrorAC({error: (error as TasksError).data.message }))
+  //   }
+  // }, [err])
+
+  if (isLoading) {
+    return <TasksSkeleton />
   }
 
   return (
